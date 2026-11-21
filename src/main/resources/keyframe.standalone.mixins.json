@@ -22,7 +22,6 @@
 		"Mixin_DeltaTrackerTimer_Export",
 		"Mixin_EditBox_ScreenState",
 		"Mixin_FirstPersonHandsAndItems_Puppet",
-		"Mixin_FrameClock_PolyBlur",
 		"Mixin_GameRenderer_Puppet",
 		"Mixin_GlBuffer_Export",
 		"Mixin_Gui_Audio",

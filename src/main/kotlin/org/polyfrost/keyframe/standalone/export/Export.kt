@@ -239,9 +239,6 @@ object Export {
 	//?}
 
 	@JvmStatic
-	fun nanos(): Long = Util.getNanos()
-
-	@JvmStatic
 	fun partialTick(): Float = session?.schedule?.partial() ?: 0f
 
 	@JvmStatic
