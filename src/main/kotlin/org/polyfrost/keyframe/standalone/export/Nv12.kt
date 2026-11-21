@@ -83,7 +83,17 @@ internal class Nv12Converter private constructor(
 
 	companion object {
 		private val LOGGER = LoggerFactory.getLogger("Keyframe")
-		private val TOGGLES = intArrayOf(GL11.GL_BLEND, GL11.GL_SCISSOR_TEST, GL11.GL_CULL_FACE, GL11.GL_DEPTH_TEST, GL11.GL_STENCIL_TEST).toList()
+		private val TOGGLES = listOf(
+			GL11.GL_BLEND,
+			GL11.GL_SCISSOR_TEST,
+			GL11.GL_CULL_FACE,
+			GL11.GL_DEPTH_TEST,
+			GL11.GL_STENCIL_TEST,
+			//? if =1.8.9 {
+			/*// The packed NV12 shader writes pixel data into alpha.
+			GL11.GL_ALPHA_TEST,
+			*///?}
+		)
 
 		private const val INFO_LOG_LENGTH = 4096
 
