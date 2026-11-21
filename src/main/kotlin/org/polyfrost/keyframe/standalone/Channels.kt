@@ -1,6 +1,7 @@
 package org.polyfrost.keyframe.standalone
 
 import net.fabricmc.loader.api.FabricLoader
+import net.minecraft.client.Minecraft
 import net.minecraft.util.Util
 import org.polyfrost.keyframe.standalone.playback.Keyframe
 import org.polyfrost.keyframe.standalone.recording.ReplayRecord
@@ -20,18 +21,35 @@ import java.util.function.Supplier
 
 object Channels {
 	private val LOGGER = LoggerFactory.getLogger(Standalone.MOD_ID)
+	private const val EVERGREEN_PING = "evergreenhud:ping"
 
 	private val samplers = ConcurrentHashMap<String, Supplier<String?>>()
 	private val written = HashMap<String, String?>()
 	private val replayed = ConcurrentHashMap<String, String>()
+	@Volatile
+	private var pingSample: Pair<Any, Long>? = null
 
 	fun install() {
-		val share = FabricLoader.getInstance().objectShare
+		val loader = FabricLoader.getInstance()
+		if (loader.isModLoaded("evergreenhud")) {
+			register(EVERGREEN_PING, Supplier {
+				pingSample?.takeIf { it.first === Minecraft.getInstance().player }?.second?.toString()
+			})
+		}
+		val share = loader.objectShare
 		share.put("keyframe:register_channel", BiConsumer<String, Supplier<String?>>(::register))
 		share.put("keyframe:unregister_channel", Consumer<String>(::unregister))
 		share.put("keyframe:channel", Function<String, String?> { id -> if (Keyframe.active) replayed[id] else null })
 		share.put("keyframe:replaying", BooleanSupplier { Keyframe.active })
 		share.put("keyframe:nanos", LongSupplier { Util.getNanos() })
+	}
+
+	@JvmStatic
+	fun evergreenPing(livePing: Long?): Long? {
+		if (Keyframe.active) return replayed[EVERGREEN_PING]?.toLongOrNull()
+		val player = Minecraft.getInstance().player
+		pingSample = if (player != null && livePing != null && livePing >= 0) player to livePing else null
+		return livePing
 	}
 
 	internal fun register(id: String, sampler: Supplier<String?>) {
