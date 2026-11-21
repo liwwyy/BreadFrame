@@ -9,6 +9,7 @@ BreadFrame forks [Playback](https://github.com/awruff/Playback), a client-side M
 - Both maintained targets use an Adoptium Java 25 toolchain and require OneConfig 1.9.0 or later with PolyCompose. After a OneConfig update, the user can check that the editor opens and that the export settings render.
 - `settings.gradle.kts` declares the Minecraft targets, `stonecutter.properties.toml` pins per-version dependencies, and `stonecutter.gradle.kts` handles version-specific source transformations.
 - Install the regular mod jar in the matching Fabric profile. Check the jar's `fabric.mod.json` for runtime requirements. Flashback is optional and selects the add-on mode when present.
+- At the end of each successful build, replace the installed Keyframe jar in `/home/user/.local/share/Polyfrost/OneClient/clusters/1.8.9 Fabric/mods/` with the latest regular 1.8.9 Ornithe jar. Build the Ornithe target first if needed and leave only one Keyframe jar in that profile.
 - Leave graphical tests to the user. Do not capture screenshots or simulate GUI clicks or other GUI input for testing.
 
 ### Ornithe build dependencies

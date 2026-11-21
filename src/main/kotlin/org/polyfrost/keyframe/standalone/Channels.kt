@@ -3,6 +3,7 @@ package org.polyfrost.keyframe.standalone
 import net.fabricmc.loader.api.FabricLoader
 import net.minecraft.client.Minecraft
 import net.minecraft.util.Util
+import org.polyfrost.keyframe.standalone.export.Export
 import org.polyfrost.keyframe.standalone.playback.Keyframe
 import org.polyfrost.keyframe.standalone.recording.ReplayRecord
 import org.slf4j.LoggerFactory
@@ -22,6 +23,7 @@ import java.util.function.Supplier
 object Channels {
 	private val LOGGER = LoggerFactory.getLogger(Standalone.MOD_ID)
 	private const val EVERGREEN_PING = "evergreenhud:ping"
+	private const val RECORDED_FPS = "keyframe:fps"
 
 	private val samplers = ConcurrentHashMap<String, Supplier<String?>>()
 	private val written = HashMap<String, String?>()
@@ -31,6 +33,14 @@ object Channels {
 
 	fun install() {
 		val loader = FabricLoader.getInstance()
+		register(RECORDED_FPS, Supplier {
+			//? if =1.8.9 {
+			/*val fps = Minecraft.getCurrentFps()
+			*///?} else {
+			val fps = Minecraft.getInstance().fps
+			//?}
+			fps.takeIf { it > 0 }?.toString()
+		})
 		if (loader.isModLoaded("evergreenhud")) {
 			register(EVERGREEN_PING, Supplier {
 				pingSample?.takeIf { it.first === Minecraft.getInstance().player }?.second?.toString()
@@ -50,6 +60,12 @@ object Channels {
 		val player = Minecraft.getInstance().player
 		pingSample = if (player != null && livePing != null && livePing >= 0) player to livePing else null
 		return livePing
+	}
+
+	@JvmStatic
+	fun evergreenFps(liveFps: Int): Int {
+		if (!Export.showRecordedFps()) return liveFps
+		return replayed[RECORDED_FPS]?.toIntOrNull() ?: liveFps
 	}
 
 	internal fun register(id: String, sampler: Supplier<String?>) {

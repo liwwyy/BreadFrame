@@ -72,6 +72,9 @@ object StandaloneConfig : Config("keyframe-standalone.json", "assets/keyframe/ic
 	@Switch(title = "Show HUD and hand", category = "Export")
 	var hud = true
 
+	@Switch(title = "Show recorded FPS", description = "Use the FPS measured during recording in EvergreenHud. The video frame rate stays the same.", category = "Export")
+	var recordedFps = false
+
 	@Switch(title = "Show preview while exporting", description = "Off shows only the status text", category = "Export")
 	var preview = true
 
@@ -136,6 +139,6 @@ object StandaloneConfig : Config("keyframe-standalone.json", "assets/keyframe/ic
 	fun exportSettings(): ExportSettings {
 		val exports = FabricLoader.getInstance().gameDir.resolve(outputFolder.trim().ifEmpty { "keyframe/exports" })
 		val encoder = if (autoEncoder) bestEncoder(supportedEncoders, container, colorFormat) ?: encoder else encoder
-		return ExportSettings(width, height, frameRate, keyframeInterval, encoder, quality, colorFormat, container, extraArgs, audio, hud, preview, ffmpegPath, exports, autoEncoder)
+		return ExportSettings(width, height, frameRate, keyframeInterval, encoder, quality, colorFormat, container, extraArgs, audio, hud, preview, ffmpegPath, exports, autoEncoder, recordedFps = recordedFps)
 	}
 }

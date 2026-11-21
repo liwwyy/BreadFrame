@@ -29,6 +29,7 @@ data class ExportSettings(
 	val fadeIn: Float = 0f,
 	val fadeOut: Float = 0f,
 	val titles: List<TitleSpan> = emptyList(),
+	val recordedFps: Boolean = false,
 )
 
 internal fun exportFrames(ticks: Int, fps: Int, speed: Float): Int = (ticks.toLong() * fps / (TICKS_PER_SECOND * speed.toDouble())).toInt()

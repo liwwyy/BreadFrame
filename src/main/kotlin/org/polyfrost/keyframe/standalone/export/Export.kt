@@ -270,6 +270,8 @@ object Export {
 	@JvmStatic
 	fun renderHud(): Boolean = session?.settings?.hud ?: (!Keyframe.previewing || StandaloneConfig.hud)
 
+	internal fun showRecordedFps(): Boolean = session?.settings?.recordedFps == true
+
 	private fun problem(settings: ExportSettings, totalFrames: Int): String? {
 		val maxSize = maxTextureSize()
 		return when {

@@ -24,6 +24,9 @@ object ScreenReplay : ScreenReplayCore() {
 	var drawingPreview: Screen? = null
 		private set
 
+	@JvmStatic
+	fun screenForPreviewBackground(actual: Screen?): Screen? = if (Keyframe.previewing) previewed else actual
+
 	override fun applyToScreen(screen: Screen, state: ScreenState) {
 		val creative = screen as? CreativeInventoryScreen
 		val fields = creative as Mixin_CreativeInventoryScreen_ScreenState?

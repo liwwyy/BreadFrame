@@ -140,7 +140,7 @@ private val SHAPES = listOf(
 	Shape("Classic", 4, 3),
 )
 private val SIZES = mapOf(1080 to "1080p", 1440 to "1440p", 2160 to "4K")
-private val SETTINGS = listOf("audio", "hud")
+private val SETTINGS = listOf("audio", "hud", "recordedFps")
 private val MORE_SETTINGS = listOf("container", "autoEncoder", "encoder", "quality", "colorFormat", "keyframeInterval", "preview", "outputFolder", "extraArgs", "ffmpegPath")
 private const val MAX_NAME_LENGTH = 64
 
