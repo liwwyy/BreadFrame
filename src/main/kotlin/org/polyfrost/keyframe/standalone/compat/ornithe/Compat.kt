@@ -195,6 +195,7 @@ internal object FixedTickRate {
 internal fun ClientWorld.tickRateManager() = FixedTickRate
 
 internal fun WorldRenderer.hasRenderedAllSections(): Boolean {
+	ArgentumCompat.terrainComplete(this)?.let { return it }
 	val renderer = this as Mixin_WorldRenderer_Export
 	val dispatcher = renderer.`keyframe$getChunkRenderDispatcher`() as Mixin_ChunkRenderDispatcher_Export
 	return renderer.`keyframe$getDirtyChunks`().isEmpty() &&
@@ -480,6 +481,15 @@ object ArgentumCompat {
 	@JvmStatic
 	fun keepMainFramebuffer() {
 		requestFramebuffer?.invoke(Minecraft.getInstance())
+	}
+
+	private val celeritasRenderer = runCatching { WorldRenderer::class.java.getMethod("argentum\$getWorldRenderer") }.getOrNull()
+
+	private val terrainRenderComplete by lazy { celeritasRenderer?.returnType?.let { runCatching { it.getMethod("isTerrainRenderComplete") }.getOrNull() } }
+
+	fun terrainComplete(renderer: WorldRenderer): Boolean? {
+		val complete = terrainRenderComplete ?: return null
+		return runCatching { complete.invoke(celeritasRenderer!!.invoke(renderer)) as Boolean }.getOrNull()
 	}
 
 	private val config by lazy { runCatching { Class.forName("dev.rdh.argentum.impl.Argentum").getField("CONFIG") }.getOrNull() }
